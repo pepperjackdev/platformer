@@ -4,13 +4,13 @@ ifndef VERBOSE
 endif
 
 # Runs the project
-r: b
+run: build
 	./build/platformer
 
 # Builds the sources with build-system
-b: g
+build: generate
 	ninja -C build
 
 # Generates the build-system's scripts
-g:
+generate:
 	cmake -B build -G Ninja

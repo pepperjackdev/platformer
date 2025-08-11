@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.15)
-project(platformer C)
+project(platformer CXX)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # TODO: Should be avoided
 file(GLOB SRC_FILES
-    "src/*.c"
-    "src/**/*.c"
+    "src/*.cpp"
+    "src/**/*.cpp"
 )
 
 add_executable(platformer ${SRC_FILES})
@@ -22,5 +22,5 @@ add_custom_target(run
     COMMAND platformer
     DEPENDS platformer
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Running MyProject..."
+    COMMENT "Running project..."
 )

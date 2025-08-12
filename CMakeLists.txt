@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(platformer CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -15,8 +15,8 @@ file(GLOB SRC_FILES
 add_executable(platformer ${SRC_FILES})
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(raylib REQUIRED IMPORTED_TARGET raylib)
-target_link_libraries(platformer PRIVATE PkgConfig::raylib)
+pkg_check_modules(deps REQUIRED IMPORTED_TARGET raylib)
+target_link_libraries(platformer PRIVATE PkgConfig::deps)
 
 add_custom_target(run
     COMMAND platformer

@@ -1,6 +1,6 @@
 
 ifndef VERBOSE
-	.SILENT:
+.SILENT:
 endif
 
 # Runs the project

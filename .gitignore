@@ -1,2 +1,8 @@
+# vscode local configs
 .vscode
+
+# build directory
 build
+
+# tiled project file
+*.tiled-*

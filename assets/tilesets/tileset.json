@@ -8,13 +8,19 @@
  "margin":0,
  "name":"tiles",
  "spacing":0,
- "tilecount":1,
- "tiledversion":"1.11.2",
+ "tilecount":2,
+ "tiledversion":"1.11.1",
  "tileheight":32,
  "tiles":[
         {
          "id":0,
-         "image":"assets/images/block.png",
+         "image":"..\/images\/platform.png",
+         "imageheight":32,
+         "imagewidth":32
+        }, 
+        {
+         "id":2,
+         "image":"..\/images\/block.png",
          "imageheight":32,
          "imagewidth":32
         }],

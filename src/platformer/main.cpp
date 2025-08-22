@@ -1,124 +1,126 @@
 #include <raylib.h>
+#include <raymath.h>
 
 #include <memory>
 #include <vector>
 
+#include <iostream>
+
+#define LOG(message) std::cout << message <<  std::endl;
+
 class Node {
+        protected:
+            std::vector<std::shared_ptr<Node>> children;
+
+        public:
+            virtual ~Node() = default;
+
+            std::vector<std::shared_ptr<Node>> getChildren() {
+                return this->children;
+            }
+
+            std::shared_ptr<Node> getChild(int index) {
+                return this->children.at(index);
+            }
+
+            void addChild(std::shared_ptr<Node> child) {
+                this->children.push_back(child);
+            }
+
+            virtual void dropChild(int index) {
+                this->children.erase(this->children.begin() + index);
+            }
+
+            virtual void update() {
+                for (auto node: this->children) {
+                    node.get()->update();
+                }
+            }
+
+            virtual void draw() {
+                for (auto node: this->children) {
+                    node.get()->draw();
+                }
+            }
+};
+
+class Sprite:
+    public Node {
+
     protected:
-        Rectangle rectangle;
-        Texture2D texture;
+        Vector2 position;
+        Texture2D& texture;
 
     public:
-        Node(Rectangle rectangle, Texture2D texture):
-            rectangle(rectangle), texture(texture) {}
+        Sprite(Vector2 position, 
+            Texture2D& texture):
+            position(position), texture(texture) {}
 
-        Rectangle& getRectangle() {
-            return this->rectangle;
-        }
+        virtual void draw() override {
+            // LOG("Drawing Sprite!")
 
-        Texture2D& getTexture() {
-            return this->texture;
-        }
-
-        // Override me!
-        virtual void update() {}
-
-        void draw() {
+            // Drawing the texture
             DrawTexture(
                 this->texture,
-                this->rectangle.x,
-                this->rectangle.y,
+                this->position.x,
+                this->position.y,
                 WHITE
             );
+
+            // Drawing the children
+            Node::draw();
         }
 };
 
-class Block:
-    public Node {
-    
-    public:
-        Block(Rectangle rectangle, Texture2D texture): 
-            Node(rectangle, texture) {}
-};
+class Body:
+    public Sprite {
 
-class Player:
-    public Node {
-    
     protected:
-        Camera2D camera;
-    
+        Rectangle shape;
+
     public:
-        Player(Rectangle rectangle, Texture2D texture): 
-            Node(rectangle, texture) {
-                this->camera = (Camera2D){
-                    (Vector2){GetScreenWidth() / 2, GetScreenHeight() / 2},
-                    (Vector2){rectangle.x, rectangle.y},
-                    0,
-                    4.0f
-                };
-            }
+        Body(Vector2 position, 
+            Texture2D texture,
+            Rectangle shape):
+                Sprite(position, texture), shape(shape) {}
 
-        Camera2D& getCamera() {
-            return this->camera;
-        }
-
-        void update() override {
-            // Updating position
-            if (IsKeyDown(KEY_D)) {
-                this->rectangle.x += 1;
-            }
-            
-            if (IsKeyDown(KEY_A)) {
-                this->rectangle.x -= 1;
-            }
-            
-            // Updating camera
-            this->camera.target = (Vector2){
-                this->rectangle.x + this->rectangle.width / 2, 
-                this->rectangle.y + this->rectangle.height / 2
-            };
-        }
 };
 
+class PhysicBody:
+    public Body {
+
+    protected:
+        Vector2 velocity;
+        float mass;
+    
+    public:
+        PhysicBody(Vector2 position, 
+            Texture2D texture,
+            Rectangle shape,
+            Vector2 velocity,
+            float mass):
+                Body(position, texture, shape), velocity(velocity), mass(mass) {}
+
+};
 
 int main() {
     SetTargetFPS(60);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(900, 900, "Platformer");
 
-    Texture2D blockTexture = LoadTexture("assets/tiles/block.png");
-    Texture2D playerTexture = LoadTexture("assets/tiles/player.png");
+    Texture2D texture = LoadTexture("assets/block.png");
 
-    std::vector<std::shared_ptr<Node>> nodes{};
-    nodes.push_back(std::make_shared<Block>(
-        (Rectangle){100, 100, 32, 32},
-        blockTexture
-    ));
-
-    auto player = std::make_shared<Player>(
-        (Rectangle){100, 100, 32, 32},
-        playerTexture
-    );
-
-    nodes.push_back(player);
+    Node scene{};
 
     while (!WindowShouldClose()) {
-
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            BeginMode2D(player->getCamera());
 
-                // Drawing nodes
-                for (std::shared_ptr node: nodes) {
-                    node->draw();
-                }
-
-                // Updating nodes
-                for (std::shared_ptr node: nodes) {
-                    node->update();
-                }
-
-            EndMode2D();
+            // Updating
+            scene.update();
+            
+            // Drawing
+            // scene.draw();
 
         EndDrawing();
     }

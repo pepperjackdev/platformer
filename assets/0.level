@@ -1,0 +1,14 @@
+# This is a comment in 
+# @pepperjackdev's custom level language
+
+# to create a node tree, use the above synatx:
+# <type>@<name> { <children> }
+# for example
+
+node@root {
+    node@game {
+        node@level_0 {
+
+        }
+    }
+}

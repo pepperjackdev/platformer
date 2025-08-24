@@ -12,7 +12,7 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(900, 900, "Platformer");
 
-    //
+    // The game node
     Node game = Node("game");
 
     // Adding the level node

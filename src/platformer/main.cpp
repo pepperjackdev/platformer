@@ -2,8 +2,11 @@
 #include <vector>
 #include <optional>
 #include <algorithm>
+#include <iostream>
+#include <format>
 
 #include "node.hpp"
+#include "body.hpp"
 #include "sprite.hpp"
 
 #include <raylib.h>
@@ -13,47 +16,27 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(900, 900, "Platformer");
 
-    // Creating a basic game structure
-    //  - root:
-    //      - game:
-    //          - level:
-    //              - layer:
-    //                  - tile
-
     // The root node
-    auto root = std::make_shared<Node>("root");
-    
-    // The game node
-    auto game = root->newChild(std::make_shared<Node>(
-        "game"
-    ));
+    auto root = std::make_shared<Node>(
+        "root",
+        (Vector2){100, 100}
+    );
 
-    // Adding a level node
-    auto level = game->newChild(std::make_shared<Node>(
-        "level"
-    )); 
-
-    // Adding a layer node
-    auto layer = level->newChild(std::make_shared<Node>(
-        "layer"
-    ));
-
-    // Adding a tile node
     Texture2D texture = LoadTexture("assets/grass.png");
-    auto tile = layer->newChild(std::make_shared<Sprite>(
-        "tile",
-        (Vector2){0, 0},
+    (*root) += std::make_shared<Sprite>(
+        "image",
+        (Vector2){100, 100},
         texture
-    ));
+    );
 
     while (!WindowShouldClose()) {
         // Updating
-        root->update();
+        (*root).update();
 
         // Drawing
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            root->draw();
+            (*root).draw();
         EndDrawing();
     }
 

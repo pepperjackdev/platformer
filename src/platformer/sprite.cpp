@@ -7,8 +7,8 @@ void Sprite::draw() {
     // Drawing the texture
     DrawTexture(
         this->texture,
-        this->position.x,
-        this->position.y,
+        this->get_absolute_position().x,
+        this->get_absolute_position().y,
         RAYWHITE
     );
 

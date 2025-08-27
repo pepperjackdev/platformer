@@ -5,32 +5,46 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <algorithm>
 #include <optional>
 
 #include <raylib.h>
 
-class Node {
+class Node:
+    public std::enable_shared_from_this<Node> {
+
     protected:
-        std::string name;
+        const std::string name;
+        std::shared_ptr<Node> parent;
         std::map<std::string, std::shared_ptr<Node>> children;
-        Vector2 position;
+        Vector2 relative_position;
 
     public:
-        Node(std::string name, Vector2 position = (Vector2){0, 0});
+        Node(
+            std::string name, 
+            Vector2 relative_position = (Vector2){0, 0}
+        );
 
-        std::string& getName();
-        void setName(std::string name);
+        std::string const& get_name();
 
-        void addChild(std::shared_ptr<Node> node);
-        std::shared_ptr<Node> newChild(std::shared_ptr<Node> node);
-        std::map<std::string, std::shared_ptr<Node>>& getChildren();
-        std::shared_ptr<Node> getChild(std::string name);
-        void dropChild(std::string& name);
+        std::optional<std::shared_ptr<Node>> get_parent();
+        void set_parent(std::shared_ptr<Node> node);
 
-        Vector2 getPosition();
-        void setPosition(Vector2 position);
+        bool is_root();
+        std::shared_ptr<Node> get_root();
+
+        void add_child(std::shared_ptr<Node> node);
+        std::map<std::string, std::shared_ptr<Node>> const& get_children();
+        std::shared_ptr<Node>& get_child(const std::string& name);
+        void drop_child(const std::string& name);
+
+        Vector2 get_relative_position();
+        void set_relative_position(Vector2 relative_position);
+        Vector2 get_absolute_position();
 
         virtual void update();
         virtual void draw();
+
+        void operator+=(std::shared_ptr<Node> node);
+        std::shared_ptr<Node> operator[](const std::string& name);
+        void operator-=(const std::string& name);
 };

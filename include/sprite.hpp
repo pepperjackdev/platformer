@@ -11,8 +11,11 @@ class Sprite:
         Texture2D texture;
 
     public: 
-        Sprite(std::string name, Vector2 position, Texture2D texture);
+        Sprite(
+            std::string name, 
+            Vector2 relative_position, 
+            Texture2D texture
+        );
 
         virtual void draw() override;
-
 };

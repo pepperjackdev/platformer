@@ -11,10 +11,15 @@ class Node {
         Texture2D texture;
 
     public:
-        Node(Rectangle rectangle, Texture2D texture): 
-            rectangle(rectangle), texture(texture) {};
+        Node(
+            Rectangle rectangle, 
+            Texture2D texture): 
+                rectangle(rectangle), 
+                texture(texture) {};
 
-        virtual void update(std::list<std::shared_ptr<Node>> nodes) {}
+        virtual void update(std::list<std::shared_ptr<Node>> nodes) {
+            
+        }
 
         void draw() {
             DrawTexture(
@@ -28,8 +33,10 @@ class Node {
 
 class Platform: public Node {
     public:
-        Platform(Rectangle rectangle, Texture2D texture):
-            Node(rectangle, texture) {};
+        Platform(
+            Rectangle rectangle, 
+            Texture2D texture):
+                Node(rectangle, texture) {};
 };
 
 class Entity: public Node {
@@ -38,21 +45,29 @@ class Entity: public Node {
         Vector2 acceleration;
 
     public:
-        Entity(Rectangle rectangle, Vector2 acceleration, Vector2 size, Texture2D texture):
-            Node(rectangle, texture), velocity(velocity), acceleration(acceleration) {};
+        Entity(
+            Rectangle rectangle, 
+            Vector2 velocity, 
+            Vector2 acceleration, 
+            Texture2D texture
+        ):
+            Node(rectangle, texture), 
+                velocity(velocity), 
+                acceleration(acceleration) {};
 
         void update(std::list<std::shared_ptr<Node>> nodes) override {
-            // Along X-Axis
             
-            // Along Y-Axis
-
         }
 };
 
 class Player: public Entity {
     public:
-        Player(Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 size, Texture2D texture):
-            Entity(position, velocity, acceleration, size, texture) {};
+        Player(
+            Rectangle rectangle, 
+            Vector2 velocity, 
+            Vector2 acceleration, 
+            Texture2D texture):
+                Entity(rectangle, velocity, acceleration, texture) {};
 };
 
 int main() {
@@ -63,11 +78,15 @@ int main() {
     std::list<std::shared_ptr<Node>> nodes = {};
 
     nodes.push_back(std::make_shared<Platform>(
-        (Rectangle){100, 500, 100, 100}, LoadTexture("assets/dirt_block.png"))
+        (Rectangle){100, 500, 100, 100}, 
+        LoadTexture("assets/dirt_block.png"))
     );
 
     nodes.push_back(std::make_shared<Player>(
-        (Vector2){100, 300}, (Vector2){0, 0}, (Vector2){0, 100}, (Vector2){100, 100}, LoadTexture("assets/player.png"))
+        (Rectangle){100, 100, 32, 32},
+        (Vector2){0, 0},
+        (Vector2){0, 100},
+        LoadTexture("assets/player.png"))
     );
 
     while (!WindowShouldClose()) {
